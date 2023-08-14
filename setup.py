@@ -1,10 +1,13 @@
 from setuptools import setup, find_packages
 
-total_requirements = []
-with open('requirements.txt') as f:
-    module = f.read().splitlines()
-    if module is not "":
-        total_requirements.append(module)
+def get_requirements():
+    total_requirements = []
+    with open('requirements.txt') as f:
+        module = f.readline()
+        module.replace("\n", "")
+        if module != "-e .":
+            total_requirements.append(module)
+    return total_requirements
 
 setup(
     name='MyProject',
@@ -12,5 +15,5 @@ setup(
     author_email="prathmeshsoni6@gmail.com",
     version="0.0.1",
     packages=find_packages(),
-    install_requires= total_requirements,
+    install_requires= get_requirements(),
 )
