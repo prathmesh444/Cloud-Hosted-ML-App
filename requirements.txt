@@ -1,5 +1,8 @@
 setuptools
--e .
 numpy
 pandas
-scipy
+dill
+scikit-learn
+-e .
+xgboost
+catboost
