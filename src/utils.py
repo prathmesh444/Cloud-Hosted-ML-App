@@ -9,6 +9,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import r2_score
+from sklearn.model_selection import GridSearchCV
 
 from src.Exception import CustomException
 from src.logger import logging
@@ -60,11 +61,18 @@ def save_model(file_path, obj):
         raise CustomException(e, sys)
 
 
-def evaluate_models(X_train, y_train, X_test, y_test, models):
+def evaluate_models(X_train, y_train, X_test, y_test, models, params):
     try:
         trained_models = []
         trained_models_score = []
         for model_name, model in models.items():
+            para = params[model_name]
+
+            # hyperparameter tuning, GridSearchCV cross-validation
+            GS = GridSearchCV(model, para, cv=3)
+            GS.fit(X_train, y_train)
+
+            model.set_params(**GS.best_params_)
             model.fit(X_train, y_train)
 
             y_test_pred = model.predict(X_test)
